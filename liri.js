@@ -27,15 +27,16 @@ request(queryUrl, function(error, response, body) {
       // If the request is successful
       if (!error && response.statusCode === 200) {
     
-        // Parse the body of the site and recover just the imdbRating
+
         // (Note: The syntax below for parsing isn't obvious. Just spend a few moments dissecting it).
-        console.log("Title of the movie:" + JSON(body).Title)
+        console.log("Title of the movie:" + JSON.parse(body).Title);
         console.log("Released on: " + JSON.parse(body).Year);
-        console.log("IMDB Rating:" + JSON(body).imdbRatingg);
-        console.log("Rotten Tomatoes Rating:" + JSON(body).Ratings[1].source);
-        console.log("Country:" + JSON(body).Country);
-        console.log("Plot:" + JSON(body).Plot);
-        console.log("Actors:" + JSON(body).Actors);
+        console.log("IMDB Rating:" + JSON.parse(body).imdbRating);
+        console.log("Rotten Tomatoes Rating:" + JSON.parse(body).Ratings[1].Source);
+        console.log("Country:" + JSON.parse(body).Country);
+        console.log("Plot:" + JSON.parse(body).Plot);
+        console.log("Actors:" + JSON.parse(body).Actors);
+
       }
     });
 

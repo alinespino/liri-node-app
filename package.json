@@ -22,7 +22,9 @@
   },
   "homepage": "https://github.com/alinespino/liri-node-app#readme",
   "dependencies": {
+    "json": "^9.0.6",
     "node-spotify-api": "^1.0.7",
+    "omdb": "^0.8.0",
     "require": "^2.4.20"
   }
 }
