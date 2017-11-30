@@ -10,6 +10,8 @@
 
 //TWITTER // 
 
+// not identifying .GET  // 
+
 var keys = require ("./keys.js");
 var Twitter = require('twitter');
 var client = keys;
@@ -39,8 +41,8 @@ if (myTweets === "my-tweets"){
 // node liri.js movie-this '<movie name here>'
 
 var request = require("request");
-var movie = process.argv[3];
 var omdb = process.argv[2]
+var movie = process.argv[3];
 
 
 var queryUrl = "http://www.omdbapi.com/?t=" + movie + "&y=&plot=short&apikey=trilogy";
@@ -93,4 +95,27 @@ request(queryUrl, function(error, response, body) {
 // }
 
 
+// SPOTIFY //
 
+// Client ID 9173e7ff61914286993f2cac747fd87e
+// Client Secret 52b526f578ae49d68f31f4422959e5f5
+
+var Spotify = require('node-spotify-api');
+var command = process.argv[2]
+var song = process.argv[3]
+
+if ( command === spotify-this-song) {
+
+var spotify = new Spotify({
+ id:"9173e7ff61914286993f2cac747fd87e",
+ secret:"V52b526f578ae49d68f31f4422959e5f5"
+});
+
+spotify.search({ type: 'track', query: 'Hello' }, function(err, data) {
+ if (err) {
+   return console.log('Error occurred: ' + err);
+ }
+
+console.log(data); 
+});
+}
