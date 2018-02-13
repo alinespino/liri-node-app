@@ -14,7 +14,6 @@ var command = process.argv[2];
 
 ///// TWITTER ///// 
 
-
 if (command === "my-tweets") {
 
   var client = new Twitter(keys.twitter);
@@ -45,17 +44,19 @@ if (command === "my-tweets") {
 
 ///// OMDB /////
 
+if (command === "movie-this") {
 
-var movie = process.argv[3];
-var queryUrl = "http://www.omdbapi.com/?t=" + movie + "&y=&plot=short&apikey=trilogy";
+  var movie = process.argv[3];
+  if (movie = " ") {
+    movie = "Mr.Nobody"
+  }
+  console.log("======" + movie + "====")
+  var queryUrl = "http://www.omdbapi.com/?t=" + movie + "&y=&plot=short&apikey=trilogy";
+  // debug // 
+  // console.log(queryUrl);
 
-// debug // 
-// console.log(queryUrl);
+  request(queryUrl, function (error, response, body) {
 
-request(queryUrl, function (error, response, body) {
-
-  //user must type movie-this // 
-  if (command === "movie-this") {
 
     // If the request is successful//
     if (!error && response.statusCode === 200) {
@@ -68,43 +69,18 @@ request(queryUrl, function (error, response, body) {
       console.log("Plot:" + JSON.parse(body).Plot);
       console.log("Actors:" + JSON.parse(body).Actors);
     }
+
   }
-});
-
-// NEED TO SOLVE HOW TO CALL MR NOBODY // 
-
-// if (movie === " ") {
-//     var blank = "Mr.Nobody";
-//     var newQueryUrl = "http://www.omdbapi.com/?t=" + blank + "&y=&plot=short&apikey=trilogy";
-//     console.log(newQueryUrl);
-
-//     request(newQueryUrl, function(error, response, body) {
-//         if (!error && response.statusCode === 200) {
-
-//                 console.log("Title of the movie:" + JSON.parse(body).Title);
-//                 console.log("Released on: " + JSON.parse(body).Year);
-//                 console.log("IMDB Rating:" + JSON.parse(body).imdbRating);
-//                 console.log("Rotten Tomatoes Rating:" + JSON.parse(body).Ratings[1].Source);
-//                 console.log("Country:" + JSON.parse(body).Country);
-//                 console.log("Plot:" + JSON.parse(body).Plot);
-//                 console.log("Actors:" + JSON.parse(body).Actors);
-//    console.log("If you haven't watched 'Mr. Nobody', then you should: http://www.imdb.com/title/tt0485947/"+
-//     "It's on Netflix!");
-
-//               }
-
-//             });
-// }
+  )
+};
 
 
 ///// SPOTIFY /////
-
 
 if (command === 'spotify-this-song') {
   var searchSong = process.argv[3]
   spotifyThis(searchSong);
 };
-
 
 // log.txt file // 
 var thisArtists = function (artist) {
@@ -134,20 +110,13 @@ function spotifyThis(songSearch) {
       var songs = data.tracks.items;
 
       for (var i = 0; i < songs.length; i++) {
-    
+
         // Preview songs // console.log(songs[i]);
         console.log('artist:' + songs[i].artists.map(thisArtists));
         console.log('song name:' + songs[i].name);
         console.log('preview of the song:' + songs[i].preview_url);
         console.log('album: ' + songs[i].album.name);
         console.log('====================================')
-
-
-
-        // Joel's help DELETE// 
-        // console.log("Artist is:" + JSON.stringify(data.tracks.items[0].album.artists[0].name, null, 2));
-        // console.log("Song is:" + JSON.stringify(data.tracks.items[0].name, null, 2));
-
       }
     });
 };
@@ -166,11 +135,8 @@ function doIt() {
     var dataArray = data.split(",");
     console.log(dataArray);
 
-    if(dataArray.length === 2){
+    if (dataArray.length === 2) {
       command = spotifyThis(dataArray[1]);
-
     }
-    
-
   })
 };
