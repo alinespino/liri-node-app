@@ -22,6 +22,8 @@
   },
   "homepage": "https://github.com/alinespino/liri-node-app#readme",
   "dependencies": {
+    "dotenv": "^5.0.0",
+    "fs": "0.0.1-security",
     "json": "^9.0.6",
     "node-spotify-api": "^1.0.7",
     "node-twitter-api": "^1.8.0",

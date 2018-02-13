@@ -1,55 +1,52 @@
 
 
-// Commands //
-
-// Make it so liri.js can take in one of the following commands:
-// my-tweets
-// spotify-this-song
-// movie-this
-// do-what-it-says
-
-//TWITTER // 
-
+// Req .env file // 
+require("dotenv").config();
 
 var keys = require("./keys.js");
 var Twitter = require('twitter');
-var myTweets = process.argv[2]
+var request = require("request");
+var Spotify = require('node-spotify-api');
+var fs = require("fs");
+
+var command = process.argv[2];
 
 
-if (myTweets === "my-tweets") {
+///// TWITTER ///// 
 
-  var client = new Twitter({
-    keys
-  });
+
+if (command === "my-tweets") {
+
+  var client = new Twitter(keys.twitter);
 
   var params = {
-    screen_name:'nodejs',
+    screen_name: 'nodejs',
     count: 20
   };
-  
+
   client.get('statuses/user_timeline', params, function (error, tweets, response) {
-    if (!error) {
-    console.log(tweets);
+    if (error) {
+      console.log(error);
+    }
+
+    else {
+      // console.log(tweets);
+      tweets.forEach((item) => {
+        console.log('\ntweet ID -------------------------------------------------');
+        console.log(item.id);
+        // console.log(item.description);
+        console.log('tweet text -------------------------------------------------');
+        console.log(item.text);
+      });
     }
   });
 };
 
-// client.post('statuses/update', {status: 'I am a tweet'}, function(error, tweet, response) {
-//   if (!error) {
-//     console.log(tweet);
-//   }
-// });
+
+///// OMDB /////
 
 
-
-// OMDB
-// node liri.js movie-this '<movie name here>'
-
-var request = require("request");
-var omdb = process.argv[2]
 var movie = process.argv[3];
-
-
 var queryUrl = "http://www.omdbapi.com/?t=" + movie + "&y=&plot=short&apikey=trilogy";
 
 // debug // 
@@ -58,7 +55,7 @@ var queryUrl = "http://www.omdbapi.com/?t=" + movie + "&y=&plot=short&apikey=tri
 request(queryUrl, function (error, response, body) {
 
   //user must type movie-this // 
-  if (omdb === "movie-this") {
+  if (command === "movie-this") {
 
     // If the request is successful//
     if (!error && response.statusCode === 200) {
@@ -100,28 +97,75 @@ request(queryUrl, function (error, response, body) {
 // }
 
 
-// SPOTIFY //
+///// SPOTIFY /////
 
-// Client ID 9173e7ff61914286993f2cac747fd87e
-// Client Secret 52b526f578ae49d68f31f4422959e5f5
-
-
-var Spotify = require('node-spotify-api');
-var command = process.argv[2]
-var song = process.argv[3]
 
 if (command === 'spotify-this-song') {
-
-  var spotify = new Spotify({
-    id: "9173e7ff61914286993f2cac747fd87e",
-    secret:"52b526f578ae49d68f31f4422959e5f5"
-  });
-
-  spotify.search({ type:'track', query: song }, function (err, data) {
-    if (err) {
-      return console.log('Error occurred: ' + err);
-    }
-    console.log("Song is:"+ data);
-  });
+  var searchSong = process.argv[3]
+  spotifyThis(searchSong);
 };
 
+
+// log.txt file // 
+var thisArtists = function (artist) {
+  return artist.name;
+}
+
+// Run Spotify //
+
+function spotifyThis(songSearch) {
+
+  var spotify = new Spotify(keys.spotify);
+
+  if (songSearch === undefined) {
+    songSearch = 'The Sign Ace of Base'
+  };
+
+  spotify.search(
+    {
+      type: 'track',
+      query: songSearch
+    },
+    function (err, data) {
+      if (err) {
+        return console.log('Error occurred: ' + err);
+      }
+
+      var songs = data.tracks.items;
+
+      for (var i = 0; i < songs.length; i++) {
+    
+        // Preview songs // console.log(songs[i]);
+        console.log('artist:' + songs[i].artists.map(thisArtists));
+        console.log('song name:' + songs[i].name);
+        console.log('preview of the song:' + songs[i].preview_url);
+        console.log('album: ' + songs[i].album.name);
+        console.log('====================================')
+
+
+
+        // Joel's help DELETE// 
+        // console.log("Artist is:" + JSON.stringify(data.tracks.items[0].album.artists[0].name, null, 2));
+        // console.log("Song is:" + JSON.stringify(data.tracks.items[0].name, null, 2));
+
+      }
+    });
+};
+
+///// DO WHAT IT SAYS /////
+
+
+if (command === "do-what-it-says") {
+  doIt();
+}
+
+function doIt() {
+
+  fs.readFile("random.txt", "utf8", function (error, data) {
+    if (error) {
+      return console.log(error);
+    }
+    console.log(data);
+
+  })
+};
