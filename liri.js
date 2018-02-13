@@ -154,7 +154,6 @@ function spotifyThis(songSearch) {
 
 ///// DO WHAT IT SAYS /////
 
-
 if (command === "do-what-it-says") {
   doIt();
 }
@@ -162,10 +161,16 @@ if (command === "do-what-it-says") {
 function doIt() {
 
   fs.readFile("random.txt", "utf8", function (error, data) {
-    if (error) {
-      return console.log(error);
-    }
     console.log(data);
+
+    var dataArray = data.split(",");
+    console.log(dataArray);
+
+    if(dataArray.length === 2){
+      command = spotifyThis(dataArray[1]);
+
+    }
+    
 
   })
 };
